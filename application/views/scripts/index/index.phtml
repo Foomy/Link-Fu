@@ -1,0 +1,24 @@
+<?php if (! empty($this->form)): ?>
+	<?php echo $this->form; ?>
+<?php endif; ?>
+
+<?php if (! empty($this->linklist)): ?>
+<div id="linklist">
+	<table>
+	<?php foreach ($this->linklist as $link): ?>
+	<tr id="item_<?php echo $link->getId(); ?>" class="item">
+		<td class="id"><?php echo $link->getId(); ?></td>
+		<td>
+			<a href="<?php echo $link->getReference(); ?>">
+				<?php echo $link->getLinktext(); ?>
+			</a>
+		</td>
+		<td>
+			<button class="ctrl del is_linkctrl_del" rel="<?php echo $link->getId(); ?>">del</button>
+			<button class="ctrl edt is_linkctrl_edt" rel="<?php echo $link->getId(); ?>">edit</button>
+		</td>
+	</tr>
+	<?php endforeach; ?>
+	</table>
+</div>
+<?php endif; ?>

@@ -1,0 +1,45 @@
+/**
+ * Main stylesheet file.
+ * 
+ * 1. Linkform
+ * 2. Linklist
+ * 
+ */
+
+
+
+/* 1. Linkform */
+
+#linkform dt {
+	margin: 5px 0 2px 0;
+}
+
+
+
+/* 2. Linklist */
+
+#linklist {
+	border: solid 1px black;
+	margin: 10px 0 0 0;
+	padding: 5px;
+}
+
+	#linklist td {
+		padding:2px;
+	}
+	
+	#linklist .id {
+		text-align:right;
+	}
+
+	#linklist .item button {
+		background: #ccc;
+	}
+	
+	#linklist .item .add {
+		color: green;
+	}
+	
+	#linklist .item .del {
+		color: red;
+	}
