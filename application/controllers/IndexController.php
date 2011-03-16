@@ -54,6 +54,7 @@ class IndexController extends Zend_Controller_Action
 	public function indexAction()
 	{
 		$form = new Form_Link();
+		$form->setAction('/');
 
 		$request = $this->getRequest();
 		if ($request->isPost() && $form->isValid($request->getPost())) {

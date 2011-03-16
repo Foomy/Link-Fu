@@ -10,10 +10,14 @@ body {
 	color: #000;
 }
 
+#sitewrapper {
+	width: 980px;
+	margin: 20px auto;
+}
+
 #content {
 	background: #fff;
 	border: double 3px #888;
-	width:960px;
-	margin: 50px auto;
+
 	padding: 10px;
 }

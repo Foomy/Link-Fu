@@ -26,8 +26,8 @@ class Form_Link extends Zend_Form
 	private function getIdElement()
 	{
 		$element = new Zend_Form_Element_Hidden('linkId');
-		$element->clearDecorators();
-		$element->addDecorators(array('viewHelper'));
+//		$element->clearDecorators();
+//		$element->addDecorators(array('viewHelper'));
 		return $element;
 	}
 
