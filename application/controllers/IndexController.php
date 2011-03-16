@@ -44,7 +44,7 @@ class IndexController extends Zend_Controller_Action
 		$this->view->headScript()->appendFile(
 			'/js/Linklist.js',
 			'text/javascript'
-			);
+		);
 	}
 
 	/**
@@ -64,14 +64,12 @@ class IndexController extends Zend_Controller_Action
 				Zend_Debug::dump($values);
 			}
 
-			$tbl = Model_Link_Table::getInstance();
+			$tbl = $this->getTableInstance();
 			$link = $tbl->createRow($values);
 			$link->save();
 		}
 
-		$linklist = Model_Link_Table::getInstance();
-		$this->view->linklist = $linklist->getAll();
-
+		$this->view->linklist = $this->getLinkTableInstance()->getAll();
 		$this->view->form = $form;
 	}
 
@@ -86,7 +84,7 @@ class IndexController extends Zend_Controller_Action
 			$error = false;
 
 			$id = (int)$this->getRequest()->getParam('linkId', 0);
-			if (($link = Model_Link_Table::getById($id)) !== null) {
+			if (($link = $this->getLinkTableInstance()->getById($id)) !== null) {
 				$link->delete();
 			} else {
 				$error = true;
@@ -112,7 +110,7 @@ class IndexController extends Zend_Controller_Action
 			$this->setAjaxBehavior();
 
 			$id = (int)$this->getRequest()->getParam('linkId', 0);
-			if (($link = Model_Link_Table::getById($id)) !== null) {
+			if (($link = $this->getLinkTableInstance()->getById($id)) !== null) {
 				$data = array(
 					'error' => false,
 					'id' => $link->getId(),
@@ -138,7 +136,7 @@ class IndexController extends Zend_Controller_Action
 		$id = (int)$request->getParam('linkId', 0);
 
 		try {
-			if (($link = Model_Link_Table::getById($id)) !== null) {
+			if (($link = $this->getLinkTableInstance()->getById($id)) !== null) {
 
 				$link->setLinktext($request->getParam('linktext'));
 				$link->setReference($request->getParam('reference'));
@@ -149,6 +147,13 @@ class IndexController extends Zend_Controller_Action
 		}
 
 		$this->_redirect('/');
+	}
+
+	/**
+	 * Returns an instance of the link table class.
+	 */
+	protected function getLinkTableInstance() {
+		return Model_Link_Table::getInstance();
 	}
 
 	/**

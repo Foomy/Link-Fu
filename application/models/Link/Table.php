@@ -59,39 +59,39 @@ class Model_Link_Table extends Zend_Db_Table_Abstract
 	 *
 	 * @param int $id
 	 * @return Model_Link
-	 * 
+	 *
 	 * @throws InvalidArgumentException
 	 */
-	public static function getById($id)
+	public function getById($id)
 	{
 		if (0 >= (int)$id) {
 			throw new InvalidArgumentException('Invaid database id: ' . $id);
 		}
-		
+
 		$select = self::getInstance()->select();
 		$select->where(self::F_ID.'=?', $id);
-		
+
 		return self::getInstance()->fetchRow($select);
 	}// getById()
 
 	/**
 	 * Returns a row set of with all links stored
 	 * in the database.
-	 * 
+	 *
 	 * @return Zend_Db_Table_Rowset_Abstract
 	 */
-	public static function getAll()
+	public function getAll()
 	{
 		$select = self::getInstance()->select();
 		return self::getInstance()->fetchAll($select);
-	}
-	
+	}// getAll()
+
 	/**
 	 * Checks whether a blog, specified by its id, exists or not.
 	 *
 	 * @param int $linkId
 	 * @return bool
-	 * 
+	 *
 	 * @throws InvalidArgumentException
 	 */
 	public static function exists($id)
@@ -99,7 +99,7 @@ class Model_Link_Table extends Zend_Db_Table_Abstract
 		if (0 >= (int)$id) {
 			throw new InvalidArgumentException('Invaid database id: ' . $id);
 		}
-		
+
 		$adapter = self::getInstance()->getAdapter();
 
 		$sql = 'SELECT 1
@@ -110,7 +110,7 @@ class Model_Link_Table extends Zend_Db_Table_Abstract
 		if (0 <= (int)$res) {
 			return(true);
 		}
-		
+
 		return(false);
 	}// exists()
 
