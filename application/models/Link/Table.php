@@ -68,10 +68,10 @@ class Model_Link_Table extends Zend_Db_Table_Abstract
 			throw new InvalidArgumentException('Invaid database id: ' . $id);
 		}
 
-		$select = self::getInstance()->select();
+		$select = $this->select();
 		$select->where(self::F_ID.'=?', $id);
 
-		return self::getInstance()->fetchRow($select);
+		return $this->fetchRow($select);
 	}// getById()
 
 	/**
@@ -82,8 +82,8 @@ class Model_Link_Table extends Zend_Db_Table_Abstract
 	 */
 	public function getAll()
 	{
-		$select = self::getInstance()->select();
-		return self::getInstance()->fetchAll($select);
+		$select = $this->select();
+		return $this->fetchAll($select);
 	}// getAll()
 
 	/**
@@ -100,7 +100,7 @@ class Model_Link_Table extends Zend_Db_Table_Abstract
 			throw new InvalidArgumentException('Invaid database id: ' . $id);
 		}
 
-		$adapter = self::getInstance()->getAdapter();
+		$adapter = $this->getAdapter();
 
 		$sql = 'SELECT 1
 				FROM '.self::T_NAME.'

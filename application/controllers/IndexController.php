@@ -57,6 +57,8 @@ class IndexController extends Zend_Controller_Action
 		$form->setAction('/');
 
 		$request = $this->getRequest();
+		$tbl = $this->getLinkTableInstance();
+		
 		if ($request->isPost() && $form->isValid($request->getPost())) {
 			$values = $form->getValues();
 
@@ -64,12 +66,11 @@ class IndexController extends Zend_Controller_Action
 				Zend_Debug::dump($values);
 			}
 
-			$tbl = $this->getTableInstance();
 			$link = $tbl->createRow($values);
 			$link->save();
 		}
 
-		$this->view->linklist = $this->getLinkTableInstance()->getAll();
+		$this->view->linklist = $tbl->getAll();
 		$this->view->form = $form;
 	}
 
@@ -83,11 +84,16 @@ class IndexController extends Zend_Controller_Action
 			$this->setAjaxBehavior();
 			$error = false;
 
-			$id = (int)$this->getRequest()->getParam('linkId', 0);
-			if (($link = $this->getLinkTableInstance()->getById($id)) !== null) {
-				$link->delete();
-			} else {
+			try {
+				$id = (int)$this->getRequest()->getParam('linkId', 0);
+				if (($link = $this->getLinkTableInstance()->getById($id)) !== null) {
+					$link->delete();
+				} else {
+					throw new InvalidArgumentException('Invalid link id: ' . $id);
+				}
+			} catch (Exception $e) {
 				$error = true;
+				$this->logger->log($e->getMessage(), Zend_Log::ERR);
 			}
 
 			echo json_encode(array(
@@ -108,20 +114,28 @@ class IndexController extends Zend_Controller_Action
 	{
 		if ($this->getRequest()->isXmlHttpRequest()) {
 			$this->setAjaxBehavior();
+			$error = false;
 
-			$id = (int)$this->getRequest()->getParam('linkId', 0);
-			if (($link = $this->getLinkTableInstance()->getById($id)) !== null) {
-				$data = array(
-					'error' => false,
-					'id' => $link->getId(),
-					'reference' => $link->getReference(),
-					'linktext' => $link->getLinktext()
-				);
-			} else {
-				$data = array('error' => true);
+			try {
+				$id = (int)$this->getRequest()->getParam('linkId', 0);
+				if (($link = $this->getLinkTableInstance()->getById($id)) !== null) {
+					$data = array(
+						'error' => false,
+						'id' => $link->getId(),
+						'reference' => $link->getReference(),
+						'linktext' => $link->getLinktext()
+					);
+				} else {
+					throw new InvalidArgumentException('Invalid link id: ' . $id);
+				}
+			} catch (Exception $e) {
+				$error = true;
+				$this->logger->log($e->getMessage(), Zend_Log::ERR);
 			}
 
-			echo json_encode($data);
+			echo json_encode(array(
+				'error' => $error
+			));
 		} else {
 			$this->_redirect('/');
 		}

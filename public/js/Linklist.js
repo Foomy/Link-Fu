@@ -26,7 +26,7 @@ Linklist = {
 		ref.each(function() {
 
 			jQuery(this).unbind('click.is_linkctrl_del').bind('click.is_linkctrl_del', function() {
-				id = jQuery(this).attr('rel');
+				id = jQuery(this).val();
 
 				jQuery.ajax({
 					type: 'post',
@@ -53,7 +53,7 @@ Linklist = {
 
 			jQuery(this).unbind('click.is_linkctrl_edt').bind('click.is_linkctrl_edt', function() {
 
-				id = jQuery(this).attr('rel');
+				id = jQuery(this).val();
 				jQuery.ajax({
 					type: 'post',
 					url: '/index/edit/',
