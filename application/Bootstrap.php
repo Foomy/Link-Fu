@@ -27,9 +27,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$view->headTitle('Link Fu');
 		$view->skin = 'default';
 
-//		$view->headMeta()->setCharset('UTF-8');
-//		$view->headMeta()->appendHttpEquiv('Content-Type', 'text/html; charset=utf-8');
-//		$view->headMeta()->appendHttpEquiv('Content-Language', 'de-DE');
+		$view->headMeta()->setCharset('UTF-8');
+		$view->headMeta()->appendHttpEquiv('Content-Type', 'text/html; charset=utf-8');
+		$view->headMeta()->appendHttpEquiv('Content-Language', 'de-DE');
 
 		$view->headScript()->appendFile('/js/jquery.min.js', 'text/javascript');
 		$view->headScript()->appendFile('/js/Trigger.js', 'text/javascript');

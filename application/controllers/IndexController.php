@@ -58,7 +58,7 @@ class IndexController extends Zend_Controller_Action
 
 		$request = $this->getRequest();
 		$tbl = $this->getLinkTableInstance();
-		
+
 		if ($request->isPost() && $form->isValid($request->getPost())) {
 			$values = $form->getValues();
 
@@ -114,7 +114,9 @@ class IndexController extends Zend_Controller_Action
 	{
 		if ($this->getRequest()->isXmlHttpRequest()) {
 			$this->setAjaxBehavior();
-			$error = false;
+			$data = array(
+				'error' => true
+			);
 
 			try {
 				$id = (int)$this->getRequest()->getParam('linkId', 0);
@@ -129,13 +131,11 @@ class IndexController extends Zend_Controller_Action
 					throw new InvalidArgumentException('Invalid link id: ' . $id);
 				}
 			} catch (Exception $e) {
-				$error = true;
+				$data['excpetion'] = $e->getMessage();
 				$this->logger->log($e->getMessage(), Zend_Log::ERR);
 			}
 
-			echo json_encode(array(
-				'error' => $error
-			));
+			echo json_encode($data);
 		} else {
 			$this->_redirect('/');
 		}
