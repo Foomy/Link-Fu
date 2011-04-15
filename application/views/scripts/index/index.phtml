@@ -1,5 +1,19 @@
+<div id="formbox">
 <?php if (! empty($this->form)): ?>
 	<?php echo $this->form; ?>
+<?php endif; ?>
+</div>
+
+<?php if (! empty($this->taglist)): ?>
+<div id="taglist">
+	<ul>
+	<?php foreach ($this->taglist as $idx => $tag): ?>
+		<li class="is_tag tagWeight<?php echo $tag['cnt']; ?>">
+			<?php echo $tag['tagname']; ?>
+		</li>
+	<?php endforeach; ?>
+	</ul>
+</div>
 <?php endif; ?>
 
 <?php if (! empty($this->linklist)): ?>
@@ -8,9 +22,8 @@
 		<?php foreach ($this->linklist as $link): ?>
 
 		<tr id="item_<?php echo $link->getId(); ?>" class="item">
-<!--			<td class="id"><?php echo $link->getId(); ?></td>-->
-			<td class="thumb" rowspan="2">
-				<img src="/img/static/nothumb.png" class="previewThumb" alt="Vorschau nicht verfügbar!" title="Vorschau nicht verfügbar!" />
+			<td class="thumb" rowspan="3">
+				<div class="previewThumb" title="Vorschau nicht verfügbar!"></div>
 			</td>
 			<td>
 				<a href="<?php echo $link->getReference(); ?>">
@@ -18,7 +31,9 @@
 				</a>
 			</td>
 		</tr>
-
+		<tr>
+			<td><?php echo $this->arrayToString($link->getTags()); ?></td>
+		</tr>
 		<tr>
 			<td>
 				<button class="del is_linkctrl_del" value="<?php echo $link->getId(); ?>">del</button>

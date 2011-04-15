@@ -33,7 +33,7 @@ class Form_Link extends Zend_Form
 
 	private function getReferenceElement()
 	{
-		$element = new Zend_Form_Element_Text(Model_Link_Table::F_REFERENCE);
+		$element = new Zend_Form_Element_Text(Model_Bookmark_Table::F_REFERENCE);
 		$element->setRequired(true)
 				->setLabel('Href:')
 				->addFilter(new Zend_Filter_StripTags())
@@ -44,7 +44,7 @@ class Form_Link extends Zend_Form
 
 	private function getLinktextElement()
 	{
-		$element = new Zend_Form_Element_Text(Model_Link_Table::F_LINKTEXT);
+		$element = new Zend_Form_Element_Text(Model_Bookmark_Table::F_LINKTEXT);
 		$element->setLabel('Linktext: ')
 				->addFilter(new Zend_Filter_StripTags())
 				->addFilter(new Zend_Filter_StringTrim());

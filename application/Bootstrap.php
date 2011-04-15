@@ -39,6 +39,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		);
 		$viewRenderer->setView($view);
 
+		$view->addHelperPath('Foo/View/Helper/', 'Foo_View_Helper_');
+
 		return $view;
 	}
 

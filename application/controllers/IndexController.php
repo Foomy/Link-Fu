@@ -57,7 +57,7 @@ class IndexController extends Zend_Controller_Action
 		$form->setAction('/');
 
 		$request = $this->getRequest();
-		$tbl = $this->getLinkTableInstance();
+		$linkTable = $this->getLinkTableInstance();
 
 		if ($request->isPost() && $form->isValid($request->getPost())) {
 			$values = $form->getValues();
@@ -66,12 +66,13 @@ class IndexController extends Zend_Controller_Action
 				Zend_Debug::dump($values);
 			}
 
-			$link = $tbl->createRow($values);
+			$link = $linkTable->createRow($values);
 			$link->save();
 		}
 
-		$this->view->linklist = $tbl->getAll();
-		$this->view->form = $form;
+		$this->view->taglist	= $this->getTagTableInstance()->getAllWithNumberOfAppearance();
+		$this->view->linklist	= $linkTable->getAll();
+		$this->view->form		= $form;
 	}
 
 	/**
@@ -167,7 +168,14 @@ class IndexController extends Zend_Controller_Action
 	 * Returns an instance of the link table class.
 	 */
 	protected function getLinkTableInstance() {
-		return Model_Link_Table::getInstance();
+		return Model_Bookmark_Table::getInstance();
+	}
+
+	/**
+	 * Returns an instance of the tag table class.
+	 */
+	protected function getTagTableInstance() {
+		return Model_Tag_Table::getInstance();
 	}
 
 	/**

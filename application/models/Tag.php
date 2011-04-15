@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Row class for the link model. An instance of this
+ * Row class for the tag model. An instance of this
  * class represents a link.
  *
  * +----------+------------------+------+-----+---------------------+----------------+
@@ -15,7 +15,7 @@
  *
  * @category	Link-Fu
  * @package		Model
- * @subpackage	Link
+ * @subpackage	Tag
  * @version		1.0
  * @author		Sascha Schneider <foomy.code@arcor.de>
  */
@@ -62,8 +62,13 @@ class Model_Tag extends Zend_Db_Table_Row_Abstract
 	 */
 	public function getTagname()
 	{
-		return $this->{Model_Tag_Table::F_REFERENCE};
+		return $this->{Model_Tag_Table::F_TAGNAME};
 	}// getReference()
+
+	public function __toString()
+	{
+		return $this->getTagname();
+	}
 }
 
 /**
