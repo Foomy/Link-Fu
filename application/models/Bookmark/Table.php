@@ -36,7 +36,7 @@ class Model_Bookmark_Table extends Zend_Db_Table_Abstract
 	protected $_rowClass	= 'Model_Bookmark';
 	protected $_sequence	= true;
 
-	protected $_dependentTables = array('Model_BookmarkTag_Table');
+//	protected $_dependentTables = array('Model_BookmarkTag_Table');
 
 	protected static $instance = null;
 
@@ -83,6 +83,7 @@ class Model_Bookmark_Table extends Zend_Db_Table_Abstract
 	public function getAll()
 	{
 		$select = $this->select();
+		$select->order(array('created DESC'));
 		return $this->fetchAll($select);
 	}// getAll()
 
@@ -96,7 +97,7 @@ class Model_Bookmark_Table extends Zend_Db_Table_Abstract
 	 */
 	public static function exists($id)
 	{
-		if (0 >= (int)$id) {
+		if (0 === (int)$id) {
 			throw new InvalidArgumentException('Invaid bookmark id: ' . $id);
 		}
 

@@ -3,11 +3,11 @@
 /**
  * Definition class for the link form.
  *
+ * @author		Sascha Schneider <foomy.code@arcor.de>
+ * 
  * @category	Link-Fu
  * @package		Form
  * @subpackage	Link
- * @version		1.1
- * @author		Sascha Schneider <foomy.code@arcor.de>
  */
 
 class Form_Link extends Zend_Form
@@ -20,6 +20,7 @@ class Form_Link extends Zend_Form
 		$this->addElement($this->getIdElement());
 		$this->addElement($this->getReferenceElement());
 		$this->addElement($this->getLinktextElement());
+		$this->addElement($this->getTagsElement());
 		$this->addElement($this->getSubmit());
 	}
 
@@ -46,6 +47,15 @@ class Form_Link extends Zend_Form
 	{
 		$element = new Zend_Form_Element_Text(Model_Bookmark_Table::F_LINKTEXT);
 		$element->setLabel('Linktext: ')
+				->addFilter(new Zend_Filter_StripTags())
+				->addFilter(new Zend_Filter_StringTrim());
+		return $element;
+	}
+
+	private function getTagsElement()
+	{
+		$element = new Zend_Form_Element_Text('tags');
+		$element->setLabel('Tags: ')
 				->addFilter(new Zend_Filter_StripTags())
 				->addFilter(new Zend_Filter_StringTrim());
 		return $element;

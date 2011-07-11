@@ -1,49 +1,30 @@
 /**
  * Main stylesheet file.
  *
- * 1. Linkform
- * 2. Taglist
- * 3. Linklist
+ * 1. tag list
+ * 2. bookmark list
  *
  */
 
 
 
-/* 1. Linkform */
-
-#formbox {
-	width: 360px;
-	height: 150px;
-	padding: 0 10px;
-	float: left;
-}
-
-	#linkform {
-	}
-
-		#linkform #linkId-label,
-		#linkform #speichern-label {
-			display: none;
-		}
-
-		#linkform dd {
-			margin: 2px 0 7px 0;
-		}
-
-
-
-/* 2. Taglist */
+/* 1. tag list */
 
 #taglist {
 	width: 560px;
 	height: 150px;
 	float: right;
 }
-
 	#taglist ul li {
 		margin: 2px 5px 2px 0px;
 		font-weight: bold;
 		float: left;
+		cursor: pointer;
+	}
+
+	#taglist ul li:hover {
+		font-style: oblique;
+		text-decoration: underline;
 	}
 
 	#taglist .tagWeight2 {
@@ -59,11 +40,11 @@
 	}
 
 
-/* 3. Linklist */
+/* 2. bookmark list */
 
 #linklist {
 	border: solid 1px black;
-	margin: 150px 0 0 0;
+	margin: 180px 0 0 0;
 	padding: 5px;
 	clear: both;
 }
@@ -76,30 +57,25 @@
 		text-align:right;
 	}
 
-	#linklist .item .previewThumb {
-		background: url(/img/static/nothumb.png);
-		border: solid 1px #aaa;
-		-moz-border-radius: 10px;
-		-webkit-border-radius: 10px;
-		width: 100px;
-		height: 75px;
+	#linklist .item {
+		height: 85px;
 	}
 
-	#linklist .item button {
-		background: #ccc;
-	}
+		#linklist .item .previewThumb {
+			background: url(/img/static/nothumb.png);
+			border: solid 1px #aaa;
+			-moz-border-radius: 10px;
+			-webkit-border-radius: 10px;
+			width: 100px;
+			height: 75px;
+			float:left;
+		}
 
-	#linklist .item .add {
-		color: green;
-	}
+		#linklist .infocontrol {
+			margin: 0 0 0 110px;
+		}
 
-	#linklist .item .del {
-		color: red;
-	}
-
-
-
-
-
-
+		#linklist .item .buttons {
+			padding: 5px 0;
+		}
 

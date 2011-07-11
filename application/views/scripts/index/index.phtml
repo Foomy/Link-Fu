@@ -18,30 +18,23 @@
 
 <?php if (! empty($this->linklist)): ?>
 <div id="linklist">
-	<table>
-		<?php foreach ($this->linklist as $link): ?>
+	<?php foreach ($this->linklist as $link): ?>
+	<div id="item_<?php echo $link->getId(); ?>" class="item">
+		<div class="previewThumb" title="Vorschau nicht verfügbar!"></div>
+		<div class="infocontrol">
+			<div>
+				<a href="<?php echo $link->getReference(); ?>"><?php echo $link->getLinktext(); ?></a>
+			</div>
+			<div class="tags">
+				<span class="small">Schlagwörter:</span> <?php echo $this->arrayToString($link->getTags()); ?>
+			</div>
+			<div class="buttons">
+				<button class="delete is_linkctrl_del" value="<?php echo $link->getId(); ?>">del</button>
+				<button class="save is_linkctrl_edt" value="<?php echo $link->getId(); ?>">edit</button>
+			</div>
+		</div>
+	</div>
 
-		<tr id="item_<?php echo $link->getId(); ?>" class="item">
-			<td class="thumb" rowspan="3">
-				<div class="previewThumb" title="Vorschau nicht verfügbar!"></div>
-			</td>
-			<td>
-				<a href="<?php echo $link->getReference(); ?>">
-					<?php echo $link->getLinktext(); ?>
-				</a>
-			</td>
-		</tr>
-		<tr>
-			<td><?php echo $this->arrayToString($link->getTags()); ?></td>
-		</tr>
-		<tr>
-			<td>
-				<button class="del is_linkctrl_del" value="<?php echo $link->getId(); ?>">del</button>
-				<button class="edt is_linkctrl_edt" value="<?php echo $link->getId(); ?>">edit</button>
-			</td>
-		</tr>
-
-		<?php endforeach; ?>
-	</table>
+	<?php endforeach; ?>
 </div>
 <?php endif; ?>

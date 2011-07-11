@@ -37,9 +37,13 @@ Linklist = {
 					dataType: 'json',
 					success: function(data) {
 						if (!data.error) {
+							console.log('#item_'+data.linkId);
 							jQuery('#item_'+data.linkId).remove();
 						}
 					},
+					error: function(data) {
+						console.log('Fehler beim Speichern des Bookmarks ' + data.linkId);
+					}
 				});
 			});
 
@@ -81,5 +85,3 @@ Linklist = {
 Trigger.addTrigger('is_linkctrl_add', Linklist.addLink, 1);
 Trigger.addTrigger('is_linkctrl_del', Linklist.deleteLink, 1);
 Trigger.addTrigger('is_linkctrl_edt', Linklist.editLink, 1);
-
-console.debug(Trigger.triggers);

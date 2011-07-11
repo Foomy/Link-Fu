@@ -113,7 +113,7 @@ class Model_Tag_Table extends Zend_Db_Table_Abstract
 
 		$sql = 'SELECT 1
 				FROM '.self::T_NAME.'
-				WHERE id='.$blogId;
+				WHERE id=' . $id;
 		$res = $adapter->fetchOne($sql);
 
 		if (0 <= (int)$res) {

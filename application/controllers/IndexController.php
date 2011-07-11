@@ -31,7 +31,21 @@ class IndexController extends Zend_Controller_Action
 	 * @var Zend_Log $logger
 	 */
 	private $logger;
-
+	
+	/**
+	 * Instance of the link table.
+	 * 
+	 * @var Zend_Db_Table_Abstract $linkTable
+	 */
+	private $bookmarkTable;
+	
+	/**
+	 * Instance of the tag table.
+	 * 
+	 * @var unknown_type
+	 */
+	private $tagTable;
+	
 	/**
 	 * (non-PHPdoc)
 	 * @see Zend_Controller_Action::init()
@@ -40,9 +54,16 @@ class IndexController extends Zend_Controller_Action
 	{
 		$bootstrap = $this->getInvokeArg('bootstrap');
 		$this->logger = $bootstrap->getResource('log');
+		$this->bookmarkTable = Model_Bookmark_Table::getInstance();
+		$this->tagTable = Model_Tag_Table::getInstance();
 
 		$this->view->headScript()->appendFile(
 			'/js/Linklist.js',
+			'text/javascript'
+		);
+
+		$this->view->headScript()->appendFile(
+			'/js/TagList.js',
 			'text/javascript'
 		);
 	}
@@ -57,7 +78,6 @@ class IndexController extends Zend_Controller_Action
 		$form->setAction('/');
 
 		$request = $this->getRequest();
-		$linkTable = $this->getLinkTableInstance();
 
 		if ($request->isPost() && $form->isValid($request->getPost())) {
 			$values = $form->getValues();
@@ -66,12 +86,13 @@ class IndexController extends Zend_Controller_Action
 				Zend_Debug::dump($values);
 			}
 
-			$link = $linkTable->createRow($values);
+			$link = $this->bookmarkTable->createRow($values);
 			$link->save();
+			$this->_redirect('/');
 		}
 
-		$this->view->taglist	= $this->getTagTableInstance()->getAllWithNumberOfAppearance();
-		$this->view->linklist	= $linkTable->getAll();
+		$this->view->taglist	= $this->tagTable->getAllWithNumberOfAppearance();
+		$this->view->linklist	= $this->bookmarkTable->getAll();
 		$this->view->form		= $form;
 	}
 
@@ -83,24 +104,26 @@ class IndexController extends Zend_Controller_Action
 	{
 		if ($this->getRequest()->isXmlHttpRequest()) {
 			$this->setAjaxBehavior();
-			$error = false;
+			$returnData = array(
+				'error' => false
+			);
 
 			try {
-				$id = (int)$this->getRequest()->getParam('linkId', 0);
-				if (($link = $this->getLinkTableInstance()->getById($id)) !== null) {
+				$linkId = (int)$this->getRequest()->getParam('linkId', 0);
+				$returnData['linkId'] = $linkId;
+				$link = $this->bookmarkTable->getById($linkId);
+				if ($link instanceof Zend_Db_Table_Row_Abstract) {
 					$link->delete();
 				} else {
-					throw new InvalidArgumentException('Invalid link id: ' . $id);
+					$returnData['error'] = true;
+					$this->logger->log(sprintf('Bookmark with id %d not found in database.', $linkId), Zend_Log::ERR);
 				}
 			} catch (Exception $e) {
-				$error = true;
+				$returnData['error'] = true;
 				$this->logger->log($e->getMessage(), Zend_Log::ERR);
 			}
 
-			echo json_encode(array(
-				'error' => $error,
-				'linkId' => $id
-			));
+			echo json_encode($returnData);
 		} else {
 			$this->_redirect('/');
 		}
@@ -115,28 +138,29 @@ class IndexController extends Zend_Controller_Action
 	{
 		if ($this->getRequest()->isXmlHttpRequest()) {
 			$this->setAjaxBehavior();
-			$data = array(
+			$returnData = array(
 				'error' => true
 			);
 
 			try {
-				$id = (int)$this->getRequest()->getParam('linkId', 0);
-				if (($link = $this->getLinkTableInstance()->getById($id)) !== null) {
-					$data = array(
+				$linkId = (int)$this->getRequest()->getParam('linkId', 0);
+				$link = $this->bookmarkTable->getById($linkId);
+				if ($link instanceof Zend_Db_Table_Row_Abstract) {
+					$returnData = array(
 						'error' => false,
 						'id' => $link->getId(),
 						'reference' => $link->getReference(),
 						'linktext' => $link->getLinktext()
 					);
 				} else {
-					throw new InvalidArgumentException('Invalid link id: ' . $id);
+					$this->logger->log(sprintf('Bookmark with id %d not found in database.', $linkId), Zend_Log::ERR);
 				}
 			} catch (Exception $e) {
-				$data['excpetion'] = $e->getMessage();
+				$returnData['excpetion'] = $e->getMessage();
 				$this->logger->log($e->getMessage(), Zend_Log::ERR);
 			}
 
-			echo json_encode($data);
+			echo json_encode($returnData);
 		} else {
 			$this->_redirect('/');
 		}
@@ -148,34 +172,20 @@ class IndexController extends Zend_Controller_Action
 	public function updateAction()
 	{
 		$request = $this->getRequest();
-		$id = (int)$request->getParam('linkId', 0);
+		$linkId = (int)$request->getParam('linkId', 0);
 
 		try {
-			if (($link = $this->getLinkTableInstance()->getById($id)) !== null) {
-
+			$link = $this->bookmarkTable->getById($linkId);
+			if ($link instanceof Zend_Db_Table_Row_Abstract) {
 				$link->setLinktext($request->getParam('linktext'));
 				$link->setReference($request->getParam('reference'));
 				$link->save();
 			}
-		} catch (InvalidArgumentException $e) {
+		} catch (Exception $e) {
 			$this->logger->log($e->getMessage(), Zend_Log::ERR);
 		}
 
 		$this->_redirect('/');
-	}
-
-	/**
-	 * Returns an instance of the link table class.
-	 */
-	protected function getLinkTableInstance() {
-		return Model_Bookmark_Table::getInstance();
-	}
-
-	/**
-	 * Returns an instance of the tag table class.
-	 */
-	protected function getTagTableInstance() {
-		return Model_Tag_Table::getInstance();
 	}
 
 	/**
