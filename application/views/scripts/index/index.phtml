@@ -16,8 +16,9 @@
 </div>
 <?php endif; ?>
 
-<?php if (! empty($this->linklist)): ?>
+<?php if ($this->linklist->count() > 0): ?>
 <div id="linklist">
+	<?php echo $this->paginationControl($this->paginator, 'Sliding', 'partials/pagination.phtml', array('cssType' => 'top')); ?>
 	<?php foreach ($this->linklist as $link): ?>
 	<div id="item_<?php echo $link->getId(); ?>" class="item">
 		<div class="previewThumb" title="Vorschau nicht verfügbar!"></div>
@@ -34,7 +35,7 @@
 			</div>
 		</div>
 	</div>
-
 	<?php endforeach; ?>
+	<?php echo $this->paginationControl($this->paginator, 'Sliding', 'partials/pagination.phtml', array('cssType' => 'bottom')); ?>
 </div>
 <?php endif; ?>

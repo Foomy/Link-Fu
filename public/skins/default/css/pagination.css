@@ -1,0 +1,59 @@
+
+.pagination {
+	border: solid #ccc;
+	height: 30px;
+}
+
+.top {
+	border-width: 0 0 1px 0;
+}
+
+.bottom {
+	border-width: 1px 0 0 0;
+}
+
+	.pagination a {
+		color: #5e6a71;
+		text-decoration: none;
+	}
+
+	.pagination .inner {
+		width: 400px;
+		margin: 0 auto;
+	}
+
+		.pagination .inner div {
+			float: left;
+		}
+
+		.pagination .prev {
+			padding: 0 5px 0 0;
+		}
+
+		.pagination .pagenumbers {
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+		}
+
+			.pagination .pagenumbers li {
+				border: solid 1px #bfc1c3;
+				background: #ddd;
+				width: 22px;
+				margin: 0 3px 0 0;
+				font-size: 0.9em;
+				font-weight: bold;
+				text-align: center;
+				float: left;
+			}
+
+				.pagination .pagenumbers li a {
+					display: block;
+					background: #f0f3f5;
+					width: 100%;
+				}
+
+
+		.pagination .next {
+			padding: 0 0 0 2px;
+		}

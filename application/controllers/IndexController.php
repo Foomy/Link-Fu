@@ -6,8 +6,9 @@
  * @author		Sascha Schneider <foomy.code@arcor.de1>
  *
  * @category	Link-Fu
- * @package		Controller
- * @subpackage	Index
+ * @package		IndexController
+ *
+ * @todo Extend from Foo_Controller_Abstract
  */
 class IndexController extends Zend_Controller_Action
 {
@@ -29,6 +30,7 @@ class IndexController extends Zend_Controller_Action
 	 * Instance of the logger.
 	 *
 	 * @var Zend_Log $logger
+	 * @todo Export to Foo_Controller_Abstract
 	 */
 	private $logger;
 	
@@ -91,14 +93,32 @@ class IndexController extends Zend_Controller_Action
 			$this->_redirect('/');
 		}
 
+		$curPage		= (int)$request->getParam('curPage', 1);
+		$itemsPerPage	= (int)$request->getParam('ipp', 7);
+
+		$offset			= ($curPage-1) * $itemsPerPage;
+		$linkList		= $this->bookmarkTable->getAll($itemsPerPage, $offset);
+
+		$itemCount		= $this->bookmarkTable->count();
+		$pageCount		= ceil($itemCount / $itemsPerPage);
+
+		$paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($itemCount));
+		$paginator->setCurrentPageNumber($curPage);
+		$paginator->setItemCountPerPage($itemsPerPage);
+
 		$this->view->taglist	= $this->tagTable->getAllWithNumberOfAppearance();
-		$this->view->linklist	= $this->bookmarkTable->getAll();
+		$this->view->linklist	= $linkList;
 		$this->view->form		= $form;
+		$this->view->pageCount	= $pageCount;
+		$this->view->curPage	= $curPage;
+		$this->view->paginator	= $paginator;
 	}
 
 	/**
 	 * This controller action is called via ajax, and delete the
 	 * given link from the database.
+	 *
+ 	 * @todo Use JSON-Helper instead of setAjaxBehavior()
 	 */
 	public function deleteAction()
 	{

@@ -80,12 +80,21 @@ class Model_Bookmark_Table extends Zend_Db_Table_Abstract
 	 *
 	 * @return Zend_Db_Table_Rowset_Abstract
 	 */
-	public function getAll()
+	public function getAll($limit = 0, $offset = 0)
 	{
 		$select = $this->select();
+		$select->limit((int)$limit, (int)$offset);
+		$select->limit((int)$limit, (int)$offset);
 		$select->order(array('created DESC'));
+
 		return $this->fetchAll($select);
 	}// getAll()
+
+	public function count()
+	{
+		$clients = $this->getAll();
+		return $clients->count();
+	}
 
 	/**
 	 * Checks whether a bookmark, specified by its id, exists or not.
