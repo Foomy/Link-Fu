@@ -15,6 +15,7 @@
 	height: 150px;
 	float: right;
 }
+
 	#taglist ul li {
 		margin: 2px 5px 2px 0px;
 		font-weight: bold;
@@ -32,11 +33,11 @@
 	}
 
 	#taglist .tagWeight3 {
-		font-size: 16px;
+		font-size: 18px;
 	}
 
 	#taglist .tagWeight4 {
-		font-size: 18px;
+		font-size: 20px;
 	}
 
 

@@ -21,40 +21,18 @@
  * @author		Sascha Schneider <foomy.code@arcor.de>
  */
 
-class Model_Bookmark extends Zend_Db_Table_Row_Abstract
+class Model_Bookmark extends Model_Table_Row_Abstract
 {
 	protected $_primary = Model_Bookmark_Table::F_ID;
 
-	/**
-	 * Returns the database id of the quote.
-	 *
-	 * @return int
-	 */
-	public function getId()
+	public function init()
 	{
-		return $this->{Model_Bookmark_Table::F_ID};
-	}// getId()
+		parent::init();
 
-	/**
-	 * Returns the creation timestamp in the format "Y.m.d H:i:s".
-	 *
-	 * @return string
-	 */
-	public function getCreated()
-	{
-		return $this->{Model_Bookmark_Table::F_CREATED};
-	}// getCreated()
-
-	/**
-	 * Returns the timestamp of the last modification
-	 * in the format "Y.m.d H:i:s".
-	 *
-	 * @return string
-	 */
-	public function getModified()
-	{
-		return $this->{Model_Bookmark_Table::F_MODIFIED};
-	}// getModified()
+		$this->_id = Model_Bookmark_Table::F_ID;
+		$this->_created = Model_Bookmark_Table::F_CREATED;
+		$this->_modified = Model_Bookmark_Table::F_MODIFIED;
+	}
 
 	/**
 	 * Returns the link reference (href).
@@ -64,7 +42,7 @@ class Model_Bookmark extends Zend_Db_Table_Row_Abstract
 	public function getReference()
 	{
 		return $this->{Model_Bookmark_Table::F_REFERENCE};
-	}// getReference()
+	}
 
 	/**
 	 * Returns the link text.
@@ -74,7 +52,7 @@ class Model_Bookmark extends Zend_Db_Table_Row_Abstract
 	public function getLinktext()
 	{
 		return $this->{Model_Bookmark_Table::F_LINKTEXT};
-	}// getAuthor()
+	}
 
 	/**
 	 * Set the the reference field to the given value.

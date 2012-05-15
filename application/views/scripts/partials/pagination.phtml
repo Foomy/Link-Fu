@@ -3,8 +3,8 @@
 	<div class="inner">
 		<div>
 			<?php if ($this->previous): ?>
-			<a class="first" href="/1/"><img src="/img/icons/resultset_first.png" alt="|&lt;" title="Zur ersten Seite springen." /></a>
-			<a class="prev" href="/<?php echo $this->previous; ?>/"><img src="/img/icons/resultset_previous.png" alt="&lt;" title="Zurückblättern" /></a>
+			<a class="first is_firstPage" href="/1/"><img src="/img/icons/resultset_first.png" alt="|&lt;" title="Zur ersten Seite springen." /></a>
+			<a class="prev is_prevPage" href="/<?php echo $this->previous; ?>/"><img src="/img/icons/resultset_previous.png" alt="&lt;" title="Zurückblättern" /></a>
 			<?php else: ?>
 			<span class="first"><img src="/img/icons/resultset_first_mc.png" alt="|&lt;" title="Zur ersten Seite springen." /></span>
 			<span class="prev"><img src="/img/icons/resultset_previous_mc.png" alt="&lt;" title="Zurückblättern" /></span>
@@ -21,8 +21,8 @@
 		</ul>
 		<div>
 			<?php if ($this->next): ?>
-			<a class="next" href="/<?php echo $this->next; ?>/"><img src="/img/icons/resultset_next.png" alt="&gt;" title="Vorblättern" /></a>
-			<a class="last" href="/<?php echo $this->last; ?>/"><img src="/img/icons/resultset_last.png" alt="&gt;|" title="Zur letzten Seite springen." /></a>
+			<a class="next is_nextPage" href="/<?php echo $this->next; ?>/"><img src="/img/icons/resultset_next.png" alt="&gt;" title="Vorblättern" /></a>
+			<a class="last is_lastPage" href="/<?php echo $this->last; ?>/"><img src="/img/icons/resultset_last.png" alt="&gt;|" title="Zur letzten Seite springen." /></a>
 			<?php else: ?>
 			<span class="next"><img src="/img/icons/resultset_next_mc.png" alt="&gt;" title="Vorblättern" /></span>
 			<span class="last"><img src="/img/icons/resultset_last_mc.png" alt="&gt;|" title="Zur letzten Seite springen." /></span>

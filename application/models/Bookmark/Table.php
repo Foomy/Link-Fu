@@ -88,7 +88,7 @@ class Model_Bookmark_Table extends Zend_Db_Table_Abstract
 		$select->order(array('created DESC'));
 
 		return $this->fetchAll($select);
-	}// getAll()
+	}
 
 	public function count()
 	{
@@ -127,6 +127,8 @@ class Model_Bookmark_Table extends Zend_Db_Table_Abstract
 	 *
 	 * @param	int $bookmarkId
 	 * @return	Zend_Db_Table_Rowset_Abstract
+	 *
+	 * @throws	InvalidArgumentException
 	 */
 	public static function getTagsByBookmark($bookmarkId)
 	{
@@ -140,7 +142,7 @@ class Model_Bookmark_Table extends Zend_Db_Table_Abstract
 			'Model_Tag_Table',
 			'Model_BookmarkTag_Table'
 		);
-	}// getTagsByBookmark()
+	}
 }
 
 /**

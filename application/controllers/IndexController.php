@@ -1,73 +1,46 @@
 <?php
 
+// require_once APPLICATION_PATH . '/../library/LinkFu/Controller/Abstract.php';
+
 /**
  * Controller class for the main page.
  *
  * @author		Sascha Schneider <foomy.code@arcor.de1>
  *
- * @category	Link-Fu
+ * @category	controller
  * @package		IndexController
- *
- * @todo Extend from Foo_Controller_Abstract
  */
-class IndexController extends Zend_Controller_Action
+class IndexController extends LinkFu_Controller_Abstract
 {
-	/**
-	 * Flag turns debug messages on or off.
-	 *
-	 * @var bool DEBUG
-	 */
-	const DEBUG = false;
+	const IPP = 7;
 
-	/**
-	 * Ajax error.
-	 *
-	 * @var bool $ajaxError
-	 */
-	private $ajaxError = false;
-
-	/**
-	 * Instance of the logger.
-	 *
-	 * @var Zend_Log $logger
-	 * @todo Export to Foo_Controller_Abstract
-	 */
-	private $logger;
-	
 	/**
 	 * Instance of the link table.
-	 * 
+	 *
 	 * @var Zend_Db_Table_Abstract $linkTable
 	 */
-	private $bookmarkTable;
-	
+	private $_bookmarkTable;
+
 	/**
 	 * Instance of the tag table.
-	 * 
+	 *
 	 * @var unknown_type
 	 */
-	private $tagTable;
-	
+	private $_tagTable;
+
 	/**
 	 * (non-PHPdoc)
 	 * @see Zend_Controller_Action::init()
 	 */
 	public function init()
 	{
-		$bootstrap = $this->getInvokeArg('bootstrap');
-		$this->logger = $bootstrap->getResource('log');
-		$this->bookmarkTable = Model_Bookmark_Table::getInstance();
-		$this->tagTable = Model_Tag_Table::getInstance();
+		parent::init();
 
-		$this->view->headScript()->appendFile(
-			'/js/Linklist.js',
-			'text/javascript'
-		);
+		$this->_bookmarkTable = Model_Bookmark_Table::getInstance();
+		$this->_tagTable = Model_Tag_Table::getInstance();
 
-		$this->view->headScript()->appendFile(
-			'/js/TagList.js',
-			'text/javascript'
-		);
+		$this->view->headScript()->appendFile('/js/Linklist.js', self::MIME_JS);
+		$this->view->headScript()->appendFile('/js/TagList.js', self::MIME_JS);
 	}
 
 	/**
@@ -84,69 +57,57 @@ class IndexController extends Zend_Controller_Action
 		if ($request->isPost() && $form->isValid($request->getPost())) {
 			$values = $form->getValues();
 
-			if (self::DEBUG) {
-				Zend_Debug::dump($values);
-			}
-
-			$link = $this->bookmarkTable->createRow($values);
+			$link = $this->_bookmarkTable->createRow($values);
 			$link->save();
 			$this->_redirect('/');
 		}
 
-		$curPage		= (int)$request->getParam('curPage', 1);
-		$itemsPerPage	= (int)$request->getParam('ipp', 7);
 
-		$offset			= ($curPage-1) * $itemsPerPage;
-		$linkList		= $this->bookmarkTable->getAll($itemsPerPage, $offset);
-
-		$itemCount		= $this->bookmarkTable->count();
-		$pageCount		= ceil($itemCount / $itemsPerPage);
-
-		$paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($itemCount));
-		$paginator->setCurrentPageNumber($curPage);
-		$paginator->setItemCountPerPage($itemsPerPage);
-
-		$this->view->taglist	= $this->tagTable->getAllWithNumberOfAppearance();
-		$this->view->linklist	= $linkList;
+		$this->view->taglist	= $this->_tagTable->getAllWithNumberOfAppearance();
 		$this->view->form		= $form;
-		$this->view->pageCount	= $pageCount;
-		$this->view->curPage	= $curPage;
-		$this->view->paginator	= $paginator;
+		$this->view->page		= $this->getParam('page', 1);
 	}
 
 	/**
 	 * This controller action is called via ajax, and delete the
 	 * given link from the database.
-	 *
- 	 * @todo Use JSON-Helper instead of setAjaxBehavior()
 	 */
 	public function deleteAction()
 	{
-		if ($this->getRequest()->isXmlHttpRequest()) {
-			$this->setAjaxBehavior();
-			$returnData = array(
-				'error' => false
-			);
-
-			try {
-				$linkId = (int)$this->getRequest()->getParam('linkId', 0);
-				$returnData['linkId'] = $linkId;
-				$link = $this->bookmarkTable->getById($linkId);
-				if ($link instanceof Zend_Db_Table_Row_Abstract) {
-					$link->delete();
-				} else {
-					$returnData['error'] = true;
-					$this->logger->log(sprintf('Bookmark with id %d not found in database.', $linkId), Zend_Log::ERR);
-				}
-			} catch (Exception $e) {
-				$returnData['error'] = true;
-				$this->logger->log($e->getMessage(), Zend_Log::ERR);
-			}
-
-			echo json_encode($returnData);
-		} else {
+		if ($this->isAjax()) {
 			$this->_redirect('/');
 		}
+
+		$returnData = array(
+			'error'		=> false,
+			'message'	=> '',
+			'exception'	=> null,
+			'linkId'	=> 0
+		);
+
+		try {
+			$linkId = (int)$this->getParam('linkId', 0);
+			$returnData['linkId'] = $linkId;
+			$link = $this->_bookmarkTable->getById($linkId);
+
+			if ($link instanceof Zend_Db_Table_Row_Abstract) {
+				$link->delete();
+			} else {
+				$message = sprintf('Bookmark with id %d not found in database.', $linkId);
+
+				$returnData['message']	= message;
+				$returnData['error']	= true;
+
+				$this->debug($message);
+			}
+		} catch (Exception $e) {
+			$returnData['error'] = true;
+			$returnData['message'] = 'An exception has occurred.';
+			$returnData['exception'] = $e;
+			$this->debug($e->getMessage());
+		}
+
+		$this->_helper->json($returnData);
 	}
 
 	/**
@@ -156,65 +117,90 @@ class IndexController extends Zend_Controller_Action
 	 */
 	public function editAction()
 	{
-		if ($this->getRequest()->isXmlHttpRequest()) {
-			$this->setAjaxBehavior();
-			$returnData = array(
-				'error' => true
-			);
-
-			try {
-				$linkId = (int)$this->getRequest()->getParam('linkId', 0);
-				$link = $this->bookmarkTable->getById($linkId);
-				if ($link instanceof Zend_Db_Table_Row_Abstract) {
-					$returnData = array(
-						'error' => false,
-						'id' => $link->getId(),
-						'reference' => $link->getReference(),
-						'linktext' => $link->getLinktext()
-					);
-				} else {
-					$this->logger->log(sprintf('Bookmark with id %d not found in database.', $linkId), Zend_Log::ERR);
-				}
-			} catch (Exception $e) {
-				$returnData['excpetion'] = $e->getMessage();
-				$this->logger->log($e->getMessage(), Zend_Log::ERR);
-			}
-
-			echo json_encode($returnData);
-		} else {
+		if (! $this->isAjax()) {
 			$this->_redirect('/');
 		}
+
+		$returnData = array(
+			'error'		=> false,
+			'message'	=> '',
+			'exception'	=> null,
+			'linkId'	=> 0,
+			'reference'	=> '',
+			'linktext'	=> ''
+		);
+
+		try {
+			$linkId = (int)$this->getParam('linkId', 0);
+			$link = $this->_bookmarkTable->getById($linkId);
+			if ($link instanceof Zend_Db_Table_Row_Abstract) {
+				$returnData = array(
+					'linkId' => $link->getId(),
+					'reference' => $link->getReference(),
+					'linktext' => $link->getLinktext()
+				);
+			} else {
+				$message = sprintf('Bookmark with id %d not found in database.', $linkId);
+				$returnData['error'] = true;
+				$returnData['message'] = $message;
+				$this->debug($message);
+			}
+		} catch (Exception $e) {
+			$returnData['error'] = true;
+			$returnData['message'] = $e->getMessage();
+			$returnData['excpetion'] = $e;
+			$this->debug($e->getMessage());
+		}
+
+		$this->_helper->json($returnData);
 	}
 
 	/**
 	 * Saves an edited link in the database.
+	 *
+	 * @todo	Unfortunally the linktext wont be saved. :(
 	 */
 	public function updateAction()
 	{
-		$request = $this->getRequest();
-		$linkId = (int)$request->getParam('linkId', 0);
+		$linkId = (int)$this->getParam('linkId', 0);
 
 		try {
-			$link = $this->bookmarkTable->getById($linkId);
+			$link = $this->_bookmarkTable->getById($linkId);
 			if ($link instanceof Zend_Db_Table_Row_Abstract) {
-				$link->setLinktext($request->getParam('linktext'));
-				$link->setReference($request->getParam('reference'));
+				$link->setLinktext($this->getParam('linktext'));
+				$link->setReference($this->getParam('reference'));
 				$link->save();
 			}
 		} catch (Exception $e) {
-			$this->logger->log($e->getMessage(), Zend_Log::ERR);
+			$this->debug($e->getMessage());
 		}
 
 		$this->_redirect('/');
 	}
 
 	/**
-	 * Disables rendering of the view and the layout.
+	 * Show the linklist
 	 */
-	private function setAjaxBehavior()
+	public function linklistAction()
 	{
-		$this->getHelper('viewRenderer')->setNoRender();
-		$this->getHelper('layout')->disableLayout();
+		if ($this->isAjax()) {
+			$this->getHelper('viewRenderer')->setNoRender();
+			$this->getHelper('layout')->disableLayout();
+		}
+
+		$page		= $this->getParam('page', 1);
+		$offset		= ($page-1) * self::IPP;
+		$linkList	= $this->_bookmarkTable->getAll(self::IPP, $offset);
+
+		$itemCount	= $this->_bookmarkTable->count();
+		$pageCount	= ceil($itemCount / self::IPP);
+
+		$paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($itemCount));
+		$paginator->setCurrentPageNumber($page);
+		$paginator->setItemCountPerPage(self::IPP);
+
+		$this->view->linklist	= $linkList;
+		$this->view->paginator	= $paginator;
 	}
 }
 

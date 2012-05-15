@@ -20,51 +20,49 @@
  * @author		Sascha Schneider <foomy.code@arcor.de>
  */
 
-class Model_Tag extends Zend_Db_Table_Row_Abstract
+class Model_Tag extends Model_Table_Row_Abstract
 {
 	protected $_primary = Model_Tag_Table::F_ID;
 
-	/**
-	 * Returns the database id of the quote.
-	 *
-	 * @return int
-	 */
-	public function getId()
+	public function init()
 	{
-		return $this->{Model_Tag_Table::F_ID};
-	}// getId()
+		parent::init();
 
-	/**
-	 * Returns the creation timestamp in the format "Y.m.d H:i:s".
-	 *
-	 * @return string
-	 */
-	public function getCreated()
-	{
-		return $this->{Model_Tag_Table::F_CREATED};
-	}// getCreated()
-
-	/**
-	 * Returns the timestamp of the last modification
-	 * in the format "Y.m.d H:i:s".
-	 *
-	 * @return string
-	 */
-	public function getModified()
-	{
-		return $this->{Model_Tag_Table::F_MODIFIED};
-	}// getModified()
+		$this->_id = Model_Tag_Table::F_ID;
+		$this->_created = Model_Tag_Table::F_CREATED;
+		$this->_modified = Model_Tag_Table::F_MODIFIED;
+	}
 
 	/**
 	 * Returns the link reference (href).
 	 *
 	 * @return string
 	 */
-	public function getTagname()
+	public function getName()
 	{
 		return $this->{Model_Tag_Table::F_TAGNAME};
-	}// getReference()
+	}
 
+	/**
+	 * Returns the link reference (href).
+	 *
+	 * @deprecated
+	 */
+	public function getTagname()
+	{
+		return $this->getName();
+	}
+
+	public function setName($name)
+	{
+		$this->{Model_Tag_Table::F_TAGNAME} = $name;
+	}
+
+	/**
+	 * Controls the output if this class ist converted to a string.
+	 *
+	 * @return	atring
+	 */
 	public function __toString()
 	{
 		return $this->getTagname();

@@ -4,17 +4,32 @@
 
 TagList = {
 
-	putInField: function(ref) {
-		ref.each(function() {
+	putInField: function (ref) {
+		ref.each(function () {
 
-			jQuery(this).unbind('click.is_tag').bind('click.is_tag', function() {
+			jQuery(this).unbind('click.is_tag').bind('click.is_tag', function () {
+				var tagId = jQuery(this).data('tid');
 
-				/**
-				 *  @todo: Implement in-place editor jquery plugin, in order
-				 *         to add links into the system.
-				 */
-				alert('This functionality is not implementet yet.');
+				jQuery.ajax({
+					type: 'POST',
+					url: '/tagname/',
+					data: {
+						tagId: tagId
+					},
+					success: function (response) {
+						var actuallyChosen;
 
+						if (! response.error) {
+							actuallyChosen = jQuery('.is_linktags').val();
+							if (actuallyChosen !== '') {
+								jQuery('.is_linktags').val(actuallyChosen + ', ' + response.tagname);
+							}
+							else {
+								jQuery('.is_linktags').val(response.tagname);
+							}
+						}
+					}
+				});
 			});
 
 		});

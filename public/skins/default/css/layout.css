@@ -20,3 +20,8 @@ body {
 	border: double 3px #888;
 	padding: 10px;
 }
+
+#footer {
+	padding: 10px 20px;
+	font-size: 0.9em;
+}

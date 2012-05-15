@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Application bootstrap.
+ *
+ * @author		Sascha Schneider <foomy.code@arcor.de>
+ *
+ * @category	application
+ * @package		Bootstrap
+ */
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
 	/**
@@ -13,33 +21,39 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$autoloader = new Zend_Loader_Autoloader_Resource($config);
 
 		return $autoloader;
-	}// _initAutoloader()
+	}
 
 	/**
-	* Initializes the view
-	*
-	* return Zend_View
-	*/
-	protected function _initView()
+	 * Initialises the routes using the configuration file.
+	 */
+	protected function _initRouter()
+	{
+		$front = Zend_Controller_Front::getInstance();
+
+		$cfgPath = $this->getOption('configPath');
+		$config = new Zend_Config_Ini($cfgPath . 'routes.ini', 'production');
+
+		$router = $front->getRouter();
+		$router->addConfig($config, 'routes');
+	}
+
+	/**
+	 * Initialises the view.
+	 *
+	 * @return Zend_View $view   The View Object.
+	 */
+	public function _initView()
 	{
 		$view = new Zend_View();
 		$view->doctype('HTML5');
-		$view->headTitle('Link Fu');
+		$view->headTitle('Link-Fu');
 		$view->skin = 'default';
 
-		$view->headMeta()->setCharset('UTF-8');
-		$view->headMeta()->appendHttpEquiv('Content-Type', 'text/html; charset=utf-8');
-		$view->headMeta()->appendHttpEquiv('Content-Language', 'de-DE');
-
-		$view->headScript()->appendFile('/js/jquery.min.js', 'text/javascript');
-		$view->headScript()->appendFile('/js/Trigger.js', 'text/javascript');
-
-		$viewRenderer = Zend_Controller_Action_HelperBroker::getStaticHelper(
-			'ViewRenderer'
-		);
+		$viewRenderer = Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer');
 		$viewRenderer->setView($view);
 
-		$view->addHelperPath('Foo/View/Helper/', 'Foo_View_Helper_');
+		// @todo set sublayout dynamicaly
+		$view->subLayout = 'standard';
 
 		return $view;
 	}
@@ -51,5 +65,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 			APPLICATION_PATH . '/../library/Foo/Controller/Action/Helper',
 			'Foo_Controller_Action_Helper'
 		);
+	}
+
+	/**
+	 * Initialises the date/timezone settings.
+	 *
+	 * @return void
+	 */
+	public function _initTimezone()
+	{
+		// Set date/time zone
+		date_default_timezone_set('Europe/Berlin');
 	}
 }

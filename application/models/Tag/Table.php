@@ -36,7 +36,7 @@ class Model_Tag_Table extends Zend_Db_Table_Abstract
 
 	protected $_dependentTables = array('Model_BookmarkTag_Table');
 
-	protected static $instance = null;
+	protected static $_instance = null;
 
 	/**
 	 * Returns an instance of the tag table.
@@ -46,10 +46,10 @@ class Model_Tag_Table extends Zend_Db_Table_Abstract
 	 */
 	public static function getInstance()
 	{
-		if (null === self::$instance) {
-			self::$instance = new self();
+		if (null === self::$_instance) {
+			self::$_instance = new self();
 		}
-		return self::$instance;
+		return self::$_instance;
 	}// getInstance()
 
 	/**
@@ -57,15 +57,9 @@ class Model_Tag_Table extends Zend_Db_Table_Abstract
 	 *
 	 * @param int $id
 	 * @return Model_Tag
-	 *
-	 * @throws InvalidArgumentException
 	 */
-	public function getById($id)
+	public function findById($id)
 	{
-		if (0 >= (int)$id) {
-			throw new InvalidArgumentException('Invaid database id: ' . $id);
-		}
-
 		$select = $this->select();
 		$select->where(self::F_ID.'=?', $id);
 
@@ -87,10 +81,10 @@ class Model_Tag_Table extends Zend_Db_Table_Abstract
 
 	public function getAllWithNumberOfAppearance()
 	{
-		$sql = "SELECT tagname, COUNT(tagname) AS cnt
+		$sql = "SELECT id, tagname, COUNT(tagname) AS cnt
 				FROM tag
-		 		LEFT JOIN bookmark_tag ON (tag.id=bookmark_tag.tag_id)
-		  		GROUP BY tagname";
+				LEFT JOIN bookmark_tag ON (tag.id=bookmark_tag.tag_id)
+				GROUP BY tagname";
 
 		return $this->getAdapter()->fetchAll($sql);
 	}// getAllWithNumberOfAppearance
