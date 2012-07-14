@@ -3,13 +3,15 @@
 <?php if (! empty($this->taglist)): ?>
 <div id="taglist">
 	<ul>
-	<?php foreach ($this->taglist as $idx => $tag): ?>
+		<?php foreach ($this->taglist as $idx => $tag): ?>
 		<li class="is_tag tagWeight<?php echo $tag['cnt']; ?>" data-tid="<?php echo $tag['id']; ?>"><?php echo $tag['tagname']; ?></li>
-	<?php endforeach; ?>
+		<?php endforeach; ?>
 	</ul>
 </div>
 <?php endif; ?>
 
-<div id="linklist"><?php echo $this->action('linklist', 'index', null, array('page' => $this->page)); ?></div>
+<div id="linklist">
+	<?php echo $this->action('linklist', 'index', null, array('page' => $this->page)); ?>
+</div>
 
 <div id="tagcloud"></div>

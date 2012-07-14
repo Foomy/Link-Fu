@@ -13,7 +13,7 @@ require_once APPLICATION_PATH . '/../library/Foo/Controller/Abstract.php';
 class LinkFu_Controller_Abstract extends Foo_Controller_Abstract
 {
 	/**
-	 * @var	Mcp_Auth_Adapter
+	 * @var	Foo_Auth_Adapter
 	 */
 	protected $_auth;
 
@@ -23,7 +23,7 @@ class LinkFu_Controller_Abstract extends Foo_Controller_Abstract
 	protected $_role;
 
 	/**
-	 * @var	Mcp_Controller_Plugin_Acl
+	 * @var	Foo_Controller_Plugin_Acl
 	 */
 	protected $_acl;
 

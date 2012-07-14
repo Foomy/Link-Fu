@@ -17,20 +17,20 @@ class IndexController extends LinkFu_Controller_Abstract
 	/**
 	 * Instance of the link table.
 	 *
-	 * @var Zend_Db_Table_Abstract $linkTable
+	 * @var	Model_Bookmark_Table $_bookmarkTable
 	 */
 	private $_bookmarkTable;
 
 	/**
 	 * Instance of the tag table.
 	 *
-	 * @var unknown_type
+	 * @var	Model_Tag_Table $_tagTable
 	 */
 	private $_tagTable;
 
 	/**
 	 * (non-PHPdoc)
-	 * @see Zend_Controller_Action::init()
+	 * @see	Zend_Controller_Action::init()
 	 */
 	public function init()
 	{
@@ -63,9 +63,13 @@ class IndexController extends LinkFu_Controller_Abstract
 		}
 
 
-		$this->view->taglist	= $this->_tagTable->getAllWithNumberOfAppearance();
-		$this->view->form		= $form;
-		$this->view->page		= $this->getParam('page', 1);
+		$features = Zend_Registry::get('features');
+		if (array_key_exists('taglist', $features) && $features['taglist'] === 'on') {
+			$this->view->taglist = $this->_tagTable->getAllWithNumberOfAppearance();
+		}
+		
+		$this->view->form = $form;
+		$this->view->page = $this->getParam('page', 1);
 	}
 
 	/**

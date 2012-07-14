@@ -28,11 +28,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	 */
 	protected function _initRouter()
 	{
-		$front = Zend_Controller_Front::getInstance();
-
 		$cfgPath = $this->getOption('configPath');
 		$config = new Zend_Config_Ini($cfgPath . 'routes.ini', 'production');
 
+		$front = Zend_Controller_Front::getInstance();
 		$router = $front->getRouter();
 		$router->addConfig($config, 'routes');
 	}
@@ -42,12 +41,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	 *
 	 * @return Zend_View $view   The View Object.
 	 */
-	public function _initView()
+	protected function _initView()
 	{
 		$view = new Zend_View();
 		$view->doctype('HTML5');
 		$view->headTitle('Link-Fu');
 		$view->skin = 'default';
+		
+		$view->headScript()->appendFile('/js/jquery.min.js', Foo_Controller_Abstract::MIME_JS);
+		$view->headScript()->appendFile('/js/Trigger.js', Foo_Controller_Abstract::MIME_JS);
 
 		$viewRenderer = Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer');
 		$viewRenderer->setView($view);
@@ -69,12 +71,21 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
 	/**
 	 * Initialises the date/timezone settings.
-	 *
-	 * @return void
 	 */
-	public function _initTimezone()
+	protected function _initTimezone()
 	{
 		// Set date/time zone
 		date_default_timezone_set('Europe/Berlin');
+	}
+	
+	/**
+	 * Initializes the feature switch list.
+	 */
+	protected function _initFeatureSwitch()
+	{
+		$cfgPath = $this->getOption('configPath');
+		$config = new Zend_Config_Ini($cfgPath . 'features.ini', APPLICATION_ENV);
+		
+		Zend_Registry::set('features', $config->toArray());
 	}
 }
