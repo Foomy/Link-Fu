@@ -1,0 +1,22 @@
+# ignore this file
+#.gitignore
+
+# also ignore eclipse project files
+.buildpath
+.project
+.settings/
+
+# ignore vi swapfiles
+.*.swp
+
+# librarys & symlinks
+library/Zend
+library/Foo
+tests/library/Zend
+tests/library/phpunit
+
+# logs
+logs/
+
+# zend specific files
+.zfproject.xml

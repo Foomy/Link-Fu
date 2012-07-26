@@ -47,8 +47,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$view->doctype('HTML5');
 		$view->headTitle('Link-Fu');
 		$view->skin = 'default';
-		
-		$view->headScript()->appendFile('/js/jquery.min.js', Foo_Controller_Abstract::MIME_JS);
+
+		$jquery = 'jquery.min.js';
+		if (APPLICATION_ENV === 'development') {
+			$jquery = 'jquery.js';
+		}
+
+		$view->headScript()->appendFile('/js/' . $jquery, Foo_Controller_Abstract::MIME_JS);
 		$view->headScript()->appendFile('/js/Trigger.js', Foo_Controller_Abstract::MIME_JS);
 
 		$viewRenderer = Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer');
@@ -77,7 +82,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		// Set date/time zone
 		date_default_timezone_set('Europe/Berlin');
 	}
-	
+
 	/**
 	 * Initializes the feature switch list.
 	 */
@@ -85,7 +90,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	{
 		$cfgPath = $this->getOption('configPath');
 		$config = new Zend_Config_Ini($cfgPath . 'features.ini', APPLICATION_ENV);
-		
+
 		Zend_Registry::set('features', $config->toArray());
 	}
 }
