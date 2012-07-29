@@ -1,17 +1,32 @@
-<div id="formbox"><?php echo $this->form; ?></div>
+<?php if ($this->linklist->count() > 0): ?>
+<div id="linklist">
+	<?php echo $this->paginationControl($this->paginator, 'Sliding', 'partials/pagination.phtml', array('cssType' => 'top')); ?>
+	<div id="tagCloud" class="tagCloud is_tagCloud">
+		<?php if (! empty($this->tagCloud)): ?>
+			<?php foreach ($this->tagCloud as $idx => $tag): ?>
+			<span class="is_tag tagWeight<?php echo $tag['count']; ?>"
+				  data-tid="<?php echo $tag['id']; ?>"><?php echo $tag['tagname']; ?></span>
+			<?php endforeach; ?>
+		<?php endif; ?>
+	</div>
+	<?php foreach ($this->linklist as $link): ?>
+	<div id="item_<?php echo $link->getId(); ?>" class="item">
+		<div class="previewThumb" title="Vorschau nicht verfügbar!"></div>
+		<div class="infocontrol">
+			<div><a href="<?php echo $link->getReference(); ?>"><?php echo $link->getLinktext(); ?></a></div>
+			<div class="tags">
+				<span class="small">Schlagwörter: <span class="bold"><?php echo $link->getTagsAsString(); ?></span></span>
+			</div>
+			<div class="buttons">
+				<button class="delete is_linkctrl_del" value="<?php echo $link->getId(); ?>">del</button>
+<?php /*
+				<button class="save is_linkctrl_edt" value="<?php echo $link->getId(); ?>">edit</button>
+*/ ?>
+			</div>
+		</div>
+	</div>
+	<?php endforeach; ?>
 
-<?php if (! empty($this->taglist)): ?>
-<div id="taglist">
-	<ul>
-		<?php foreach ($this->taglist as $idx => $tag): ?>
-		<li class="is_tag tagWeight<?php echo $tag['cnt']; ?>" data-tid="<?php echo $tag['id']; ?>"><?php echo $tag['tagname']; ?></li>
-		<?php endforeach; ?>
-	</ul>
+	<?php echo $this->paginationControl($this->paginator, 'Sliding', 'partials/pagination.phtml', array('cssType' => 'bottom')); ?>
 </div>
 <?php endif; ?>
-
-<div id="linklist">
-	<?php echo $this->action('linklist', 'index', null, array('page' => $this->page)); ?>
-</div>
-
-<div id="tagcloud"></div>

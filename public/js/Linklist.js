@@ -5,87 +5,11 @@
 
 Linklist = {
 
-	first: function(ref) {
-		jQuery(this).unbind('click').bind('click.first', function() {
-
-			/**
-			 *	@todo:	Implement in-place editor jquery plugin, in order
-			 *			to add links into the system.
-			 */
-			alert('This functionality is not implementet yet.');
-
-		});
-	},
-
-	prev: function(ref) {
-		jQuery(this).unbind('click').bind('click.prev', function() {
-
-			/**
-			 *	@todo:	Implement in-place editor jquery plugin, in order
-			 *			to add links into the system.
-			 */
-			alert('This functionality is not implementet yet.');
-
-		});
-
-	},
-
-	last: function(ref) {
-		jQuery(this).unbind('click').bind('click.last', function() {
-
-			/**
-			 *	@todo:	Implement in-place editor jquery plugin, in order
-			 *			to add links into the system.
-			 */
-			alert('This functionality is not implementet yet.');
-
-		});
-
-	},
-
-	next: function(ref) {
-		jQuery(this).unbind('click').bind('click.next', function() {
-
-			/**
-			 *	@todo:	Implement in-place editor jquery plugin, in order
-			 *			to add links into the system.
-			 */
-			alert('This functionality is not implementet yet.');
-
-		});
-
-	},
-
-	list: function(ref) {
-		$.ajax({
-			type: 'POST',
-			url: '/linklist/'
-		});
-	},
-
-	addLink: function(ref) {
-		ref.each(function() {
-
-			jQuery(this).unbind('click').bind('click.is_linkctrl_add', function() {
-
-				/**
-				 *	@todo:	Implement in-place editor jquery plugin, in order
-				 *			to add links into the system.
-				 */
-				alert('This functionality is not implementet yet.');
-
-			});
-
-		});
-	}, // end addLink()
-
 	deleteLink: function(ref) {
-		var id;
-
 		ref.each(function() {
 
 			jQuery(this).unbind('click').bind('click.is_linkctrl_del', function() {
-				id = jQuery(this).val();
+				var id = jQuery(this).val();
 
 				jQuery.ajax({
 					type: 'post',

@@ -62,7 +62,7 @@ class Model_Bookmark_Table extends Zend_Db_Table_Abstract
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public function getById($id)
+	public function findById($id)
 	{
 		if (0 >= (int)$id) {
 			throw new InvalidArgumentException('Invaid bookmark id: ' . $id);
@@ -95,57 +95,9 @@ class Model_Bookmark_Table extends Zend_Db_Table_Abstract
 		$clients = $this->getAll();
 		return $clients->count();
 	}
-
-	/**
-	 * Checks whether a bookmark, specified by its id, exists or not.
-	 *
-	 * @param int $id
-	 * @return bool
-	 *
-	 * @throws InvalidArgumentException
-	 */
-	public static function exists($id)
-	{
-		if (0 === (int)$id) {
-			throw new InvalidArgumentException('Invaid bookmark id: ' . $id);
-		}
-
-		$adapter = $this->getAdapter();
-		$sql = 'SELECT 1
-				FROM '.self::T_NAME.'
-				WHERE id='.$id;
-
-		if (0 <= (int)$adapter->fetchOne($sql)) {
-			return true;
-		}
-
-		return false;
-	}// exists()
-
-	/**
-	 * Returns a row set of tags related to a given bookmark
-	 *
-	 * @param	int $bookmarkId
-	 * @return	Zend_Db_Table_Rowset_Abstract
-	 *
-	 * @throws	InvalidArgumentException
-	 */
-	public static function getTagsByBookmark($bookmarkId)
-	{
-		if (0 >= (int)$bookmarkId) {
-			throw new InvalidArgumentException('Invalid bookmark id: ' . $bookmarkId);
-		}
-
-		$table = self::getInstance()->getById($bookmarkId);
-
-		return $table->findManyToManyRowset(
-			'Model_Tag_Table',
-			'Model_BookmarkTag_Table'
-		);
-	}
 }
 
 /**
- *  "Wenn wir heute noch was vermasseln koennen, sagt mir bescheid!"
- *  (James T. Kirk, Star Trek VI - Das unendeckte Land)
+ *  "Let me know if there's some other way we can screw up tonight."
+ *  (James T. Kirk, Star Trek VI - The Undiscovered Country)
  */

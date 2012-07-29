@@ -3,6 +3,7 @@
 	<stylesheets>
 		<stylesheet>layout.css</stylesheet>
 		<stylesheet>common.css</stylesheet>
+        <stylesheet>layer.css</stylesheet>
 		<stylesheet>main.css</stylesheet>
 		<stylesheet>forms.css</stylesheet>
 		<stylesheet>pagination.css</stylesheet>

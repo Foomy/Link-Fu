@@ -79,44 +79,20 @@ class Model_Tag_Table extends Zend_Db_Table_Abstract
 		return $this->fetchAll($select);
 	}// getAll()
 
+	/**
+	 * Returns a array with all tags with their number of appearance.
+	 *
+	 * @return array
+	 */
 	public function getAllWithNumberOfAppearance()
 	{
-		$sql = "SELECT id, tagname, COUNT(tagname) AS cnt
-				FROM tag
-				LEFT JOIN bookmark_tag ON (tag.id=bookmark_tag.tag_id)
-				GROUP BY tagname";
+		$sql = "SELECT `id`, `tagname`, COUNT(tagname) AS `count`
+				FROM `tag`
+				LEFT JOIN `bookmark_tag` ON (`tag`.`id`=`bookmark_tag`.`tag_id`)
+				GROUP BY `tagname`";
 
 		return $this->getAdapter()->fetchAll($sql);
 	}// getAllWithNumberOfAppearance
-
-	/**
-	 * Checks whether a blog, specified by its id, exists or not.
-	 *
-	 * @param int $id
-	 * @return bool
-	 *
-	 * @throws InvalidArgumentException
-	 */
-	public static function exists($id)
-	{
-		if (0 >= (int)$id) {
-			throw new InvalidArgumentException('Invaid database id: ' . $id);
-		}
-
-		$adapter = $this->getAdapter();
-
-		$sql = 'SELECT 1
-				FROM '.self::T_NAME.'
-				WHERE id=' . $id;
-		$res = $adapter->fetchOne($sql);
-
-		if (0 <= (int)$res) {
-			return(true);
-		}
-
-		return(false);
-	}// exists()
-
 }
 
 /**

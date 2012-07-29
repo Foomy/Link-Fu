@@ -1,68 +1,27 @@
 /**
  * Main stylesheet file.
  *
- * 1. tag list
- * 2. bookmark list
+ * 1. bookmark list
  *
  */
 
 
-
-/* 1. tag list */
-
-#taglist {
-	width: 560px;
-	height: 150px;
-	float: right;
-}
-
-	#taglist ul li {
-		margin: 2px 5px 2px 0px;
-		font-weight: bold;
-		float: left;
-		cursor: pointer;
-	}
-
-	#taglist ul li:hover {
-		font-style: oblique;
-		text-decoration: underline;
-	}
-
-	#taglist .tagWeight2 {
-		font-size: 14px;
-	}
-
-	#taglist .tagWeight3 {
-		font-size: 18px;
-	}
-
-	#taglist .tagWeight4 {
-		font-size: 20px;
-	}
-
-
-/* 2. bookmark list */
+/* 1. bookmark list */
 
 #linklist {
-	border: solid 1px black;
-	margin: 180px 0 0 0;
 	padding: 5px;
-	clear: both;
 }
-
-	#linklist td {
-		padding:2px;
-	}
 
 	#linklist .id {
 		text-align:right;
 	}
 
 	#linklist .item {
+		width: 650px;
 		height: 85px;
 	}
 
-		#linklist .item .previewThumb {
+		#linklist .previewThumb {
 			background: url(/img/static/nothumb.png);
 			border: solid 1px #aaa;
 			-moz-border-radius: 10px;
@@ -76,7 +35,40 @@
 			margin: 0 0 0 110px;
 		}
 
-		#linklist .item .buttons {
+		#linklist .buttons {
 			padding: 5px 0;
 		}
+
+	#tagCloud {
+		border: solid black;
+		border-width: 0 0 1px 1px;
+		width: 250px;
+		height: 150px;
+		padding: 10px;
+		float: right;
+	}
+
+		#tagCloud span {
+			margin: 2px 5px 2px 0px;
+			font-weight: bold;
+			float: left;
+			cursor: pointer;
+		}
+
+		#tagCloud span:hover {
+			text-decoration: underline;
+		}
+
+		#tagCloud .tagWeight2 {
+			font-size: 14px;
+		}
+
+		#tagCloud .tagWeight3 {
+			font-size: 18px;
+		}
+
+		#tagCloud .tagWeight4 {
+			font-size: 20px;
+		}
+
 

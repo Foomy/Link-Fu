@@ -1,7 +1,5 @@
 <?php
 
-require_once APPLICATION_PATH . '/../library/Foo/Controller/Abstract.php';
-
 /**
  * Base controller for Link-Fu.
  *

@@ -84,8 +84,28 @@ class Model_Bookmark extends Model_Table_Row_Abstract
 	 * @param bool $asString
 	 * @return Zend_Db_Table_Rowset | string
 	 */
-	public function getTags($asString = false) {
-		return Model_Bookmark_Table::getTagsByBookmark($this->getId());
+	public function getTags($asString = false)
+	{
+		return $tags = $this->findManyToManyRowset('Model_Tag_Table', 'Model_BookmarkTag_Table');
+	}
+
+	public function getTagsAsArray()
+	{
+		$tags = $this->getTags();
+
+		$tagsArray = array();
+		foreach ($tags as $tag) {
+			$tagsArray[] = $tag->getName();
+		}
+
+		return $tagsArray;
+	}
+
+	public function getTagsAsString($separator = ',')
+	{
+		$separator .= ' ';
+		$tagsArray = $this->getTagsAsArray();
+		return implode($separator, $tagsArray);
 	}
 
 	public function __toString() {

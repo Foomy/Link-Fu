@@ -1,7 +1,5 @@
 <?php
 
-//require_once APPLICATION_PATH . '/../library/LinkFu/Controller/Abstract.php';
-
 /**
  * TagController
  *
@@ -21,7 +19,7 @@ class TagController extends LinkFu_Controller_Abstract
 
 	public function tagNameAction()
 	{
-		if (! $this->isAjax()) {
+		if (! $this->_isAjax()) {
 			$this->_redirect('/');
 		}
 
@@ -31,7 +29,7 @@ class TagController extends LinkFu_Controller_Abstract
 			'tagname' => ''
 		);
 
-		$tagId = (int)$this->getParam('tagId', 0);
+		$tagId = (int)$this->_getParam('tagId', 0);
 		if ($tagId <= 0) {
 			$returnData['error'] = true;
 			$returnData['message'] = 'Invalid Tag ID: ' . $tagId;

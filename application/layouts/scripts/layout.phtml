@@ -1,7 +1,6 @@
 <?php echo $this->doctype() . PHP_EOL; ?>
 <html lang="de">
 <head>
-	<meta charset="UTF-8">
 	<?php echo $this->headMeta() . PHP_EOL; ?>
 	<?php echo $this->headTitle() . PHP_EOL; ?>
 	<?php
@@ -14,13 +13,21 @@
 
 <body>
 	<div id="sitewrapper">
-		<div id="header"><h1>Link-Fu</h1></div>
-		<div id="content">
-			<?php echo $this->layout()->content; ?>
+		<div id="overlay" class="is_overlay"></div>
+		<div id="pagewrapper">
+			<div id="header"><h1>Link-Fu</h1></div>
+			<div id="content"><?php echo $this->layout()->content; ?></div>
+			<div id="footer">
+				"Let me know if there's some other way we can screw up tonight."<br />
+				(Cpt. James T. Kirk, Star Trek VI - The undiscovered Country)
+			</div>
 		</div>
-		<div id="footer">
-			"Wenn wir heute noch irgendwas vermasseln können, dann sagt mir Bescheid."<br />
-			(James Tiberius Kirk, Star Trek VI - Das unendeckte Land)
+		<div id="layer" class="is_layer">
+			<div class="head">
+				<span class="title is_layer_title"></span>
+				<img class="close is_layer_close" src="/img/icons/close.png" alt="layer close" title="Schließen">
+			</div>
+			<div class="content"></div>
 		</div>
 	</div>
 </body>

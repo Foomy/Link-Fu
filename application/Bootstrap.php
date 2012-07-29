@@ -53,6 +53,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 			$jquery = 'jquery.js';
 		}
 
+		$view->headMeta()->setCharset('UTF-8');
+
 		$view->headScript()->appendFile('/js/' . $jquery, Foo_Controller_Abstract::MIME_JS);
 		$view->headScript()->appendFile('/js/Trigger.js', Foo_Controller_Abstract::MIME_JS);
 

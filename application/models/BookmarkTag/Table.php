@@ -24,8 +24,8 @@ class Model_BookmarkTag_Table extends Zend_Db_Table_Abstract
 	const T_NAME = 'bookmark_tag';
 
 	const F_BOOKMARKID	= 'link_id';
-	const F_TAGID	= 'tag_id';
-	const F_CREATED	= 'created';
+	const F_TAGID		= 'tag_id';
+	const F_CREATED		= 'created';
 
 	protected $_name		= self::T_NAME;
 	protected $_primary		= array(

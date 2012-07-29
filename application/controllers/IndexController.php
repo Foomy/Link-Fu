@@ -1,18 +1,16 @@
 <?php
 
-// require_once APPLICATION_PATH . '/../library/LinkFu/Controller/Abstract.php';
-
 /**
  * Controller class for the main page.
  *
- * @author		Sascha Schneider <foomy.code@arcor.de1>
+ * @author		Sascha Schneider <foomy.code@arcor.de>
  *
  * @category	controller
  * @package		IndexController
  */
 class IndexController extends LinkFu_Controller_Abstract
 {
-	const IPP = 7;
+	const IPP = 5;
 
 	/**
 	 * Instance of the link table.
@@ -45,73 +43,47 @@ class IndexController extends LinkFu_Controller_Abstract
 
 	/**
 	 * This controller action creates the form and gets the data
-	 * for the linklist from the model.
+	 * for the link list from the model.
 	 */
 	public function indexAction()
 	{
+		$page		= (int)$this->_getParam('page', 1);
+		$offset		= ($page-1) * self::IPP;
+		$linkList	= $this->_bookmarkTable->getAll(self::IPP, $offset);
+
+		$itemCount	= $this->_bookmarkTable->count();
+
+		$paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($itemCount));
+		$paginator->setCurrentPageNumber($page);
+		$paginator->setItemCountPerPage(self::IPP);
+
+		$features = Zend_Registry::get('features');
+		$tagCloud = null;
+		if (array_key_exists('taglist', $features) && $features['taglist'] === 'on') {
+			$tagCloud = $this->_tagTable->getAllWithNumberOfAppearance();
+		}
+
+		$this->view->page		= $page;
+		$this->view->linklist	= $linkList;
+		$this->view->paginator	= $paginator;
+		$this->view->tagCloud	= $tagCloud;
+	}
+
+	public function bookmarkFormAction()
+	{
+		if ($this->_isAjax()) {
+			$this->_disableLayout();
+		}
+
 		$form = new Form_Link();
-		$form->setAction('/');
-
-		$request = $this->getRequest();
-
-		if ($request->isPost() && $form->isValid($request->getPost())) {
+		if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
 			$values = $form->getValues();
 
 			$link = $this->_bookmarkTable->createRow($values);
 			$link->save();
-			$this->_redirect('/');
 		}
 
-
-		$features = Zend_Registry::get('features');
-		if (array_key_exists('taglist', $features) && $features['taglist'] === 'on') {
-			$this->view->taglist = $this->_tagTable->getAllWithNumberOfAppearance();
-		}
-		
 		$this->view->form = $form;
-		$this->view->page = $this->getParam('page', 1);
-	}
-
-	/**
-	 * This controller action is called via ajax, and delete the
-	 * given link from the database.
-	 */
-	public function deleteAction()
-	{
-		if ($this->isAjax()) {
-			$this->_redirect('/');
-		}
-
-		$returnData = array(
-			'error'		=> false,
-			'message'	=> '',
-			'exception'	=> null,
-			'linkId'	=> 0
-		);
-
-		try {
-			$linkId = (int)$this->getParam('linkId', 0);
-			$returnData['linkId'] = $linkId;
-			$link = $this->_bookmarkTable->getById($linkId);
-
-			if ($link instanceof Zend_Db_Table_Row_Abstract) {
-				$link->delete();
-			} else {
-				$message = sprintf('Bookmark with id %d not found in database.', $linkId);
-
-				$returnData['message']	= message;
-				$returnData['error']	= true;
-
-				$this->debug($message);
-			}
-		} catch (Exception $e) {
-			$returnData['error'] = true;
-			$returnData['message'] = 'An exception has occurred.';
-			$returnData['exception'] = $e;
-			$this->debug($e->getMessage());
-		}
-
-		$this->_helper->json($returnData);
 	}
 
 	/**
@@ -121,7 +93,7 @@ class IndexController extends LinkFu_Controller_Abstract
 	 */
 	public function editAction()
 	{
-		if (! $this->isAjax()) {
+		if (! $this->_isAjax()) {
 			$this->_redirect('/');
 		}
 
@@ -134,26 +106,18 @@ class IndexController extends LinkFu_Controller_Abstract
 			'linktext'	=> ''
 		);
 
-		try {
-			$linkId = (int)$this->getParam('linkId', 0);
-			$link = $this->_bookmarkTable->getById($linkId);
-			if ($link instanceof Zend_Db_Table_Row_Abstract) {
-				$returnData = array(
-					'linkId' => $link->getId(),
-					'reference' => $link->getReference(),
-					'linktext' => $link->getLinktext()
-				);
-			} else {
-				$message = sprintf('Bookmark with id %d not found in database.', $linkId);
-				$returnData['error'] = true;
-				$returnData['message'] = $message;
-				$this->debug($message);
-			}
-		} catch (Exception $e) {
+		$linkId = (int)$this->_getParam('linkId', 0);
+		if (null !==  ($link = $this->_bookmarkTable->findById($linkId))) {
+			$returnData = array(
+				'linkId' => $link->getId(),
+				'reference' => $link->getReference(),
+				'linktext' => $link->getLinktext()
+			);
+		} else {
+			$message = sprintf('Bookmark with id %d not found in database.', $linkId);
 			$returnData['error'] = true;
-			$returnData['message'] = $e->getMessage();
-			$returnData['excpetion'] = $e;
-			$this->debug($e->getMessage());
+			$returnData['message'] = $message;
+			$this->_debug($message);
 		}
 
 		$this->_helper->json($returnData);
@@ -166,49 +130,46 @@ class IndexController extends LinkFu_Controller_Abstract
 	 */
 	public function updateAction()
 	{
-		$linkId = (int)$this->getParam('linkId', 0);
+		$form = new Form_Link();
 
-		try {
-			$link = $this->_bookmarkTable->getById($linkId);
-			if ($link instanceof Zend_Db_Table_Row_Abstract) {
-				$link->setLinktext($this->getParam('linktext'));
-				$link->setReference($this->getParam('reference'));
-				$link->save();
-			}
-		} catch (Exception $e) {
-			$this->debug($e->getMessage());
+		$linkId = (int)$this->_getParam('linkId', 0);
+		if (null !==  ($link = $this->_bookmarkTable->findById($linkId))) {
+			$link->setLinktext($this->_getParam('linktext'));
+			$link->setReference($this->_getParam('reference'));
+			$link->save();
 		}
 
 		$this->_redirect('/');
 	}
 
 	/**
-	 * Show the linklist
+	 * This controller action is called via ajax, and delete the
+	 * given link from the database.
 	 */
-	public function linklistAction()
+	public function deleteAction()
 	{
-		if ($this->isAjax()) {
-			$this->getHelper('viewRenderer')->setNoRender();
-			$this->getHelper('layout')->disableLayout();
+		if (! $this->_isAjax()) {
+			$this->_redirect('/');
 		}
 
-		$page		= $this->getParam('page', 1);
-		$offset		= ($page-1) * self::IPP;
-		$linkList	= $this->_bookmarkTable->getAll(self::IPP, $offset);
+		$returnData = array(
+			'error'		=> false,
+			'message'	=> '',
+			'exception'	=> null,
+			'linkId'	=> 0
+		);
 
-		$itemCount	= $this->_bookmarkTable->count();
-		$pageCount	= ceil($itemCount / self::IPP);
+		$linkId = (int)$this->_getParam('linkId', 0);
+        $returnData['linkId'] = $linkId;
+        $link = $this->_bookmarkTable->findById($linkId);
 
-		$paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($itemCount));
-		$paginator->setCurrentPageNumber($page);
-		$paginator->setItemCountPerPage(self::IPP);
+       $link->delete();
 
-		$this->view->linklist	= $linkList;
-		$this->view->paginator	= $paginator;
+		$this->_helper->json($returnData);
 	}
 }
 
 /**
- *  "Wenn wir heute noch was vermasseln koennen, sagt mir bescheid!"
- *  (James T. Kirk, Star Trek VI - Das unendeckte Land)
+ * "Let me know if there's some other way we can screw up tonight."
+ * (James T. Kirk, Star Trek VI - The Undiscovered Country)
  */
