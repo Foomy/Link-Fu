@@ -1,10 +1,10 @@
-# ignore this file
-#.gitignore
-
-# also ignore eclipse project files
+# eclipse project files
 .buildpath
 .project
 .settings/
+
+# phpstorm files
+.idea/ 
 
 # ignore vi swapfiles
 .*.swp
