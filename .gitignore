@@ -1,10 +1,10 @@
+# phpstorm files
+.idea/ 
+
 # eclipse project files
 .buildpath
 .project
 .settings/
-
-# phpstorm files
-.idea/ 
 
 # ignore vi swapfiles
 .*.swp
