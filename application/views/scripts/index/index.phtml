@@ -10,7 +10,7 @@
 		<?php endif; ?>
 	</div>
 	<?php foreach ($this->linklist as $link): ?>
-	<div id="item_<?php echo $link->getId(); ?>" class="item">
+	<div id="item_<?php echo $link->getId(); ?>" class="item is_item_<?php echo $link->getId(); ?>">
 		<div class="previewThumb" title="Vorschau nicht verfügbar!"></div>
 		<div class="infocontrol">
 			<div><a href="<?php echo $link->getReference(); ?>"><?php echo $link->getLinktext(); ?></a></div>
@@ -18,7 +18,7 @@
 				<span class="small">Schlagwörter: <span class="bold"><?php echo $link->getTagsAsString(); ?></span></span>
 			</div>
 			<div class="buttons">
-				<button class="delete is_linkctrl_del" value="<?php echo $link->getId(); ?>">del</button>
+				<button class="delete is_linkctrl_del" data-lid="<?php echo $link->getId(); ?>">del</button>
 <?php /*
 				<button class="save is_linkctrl_edt" value="<?php echo $link->getId(); ?>">edit</button>
 */ ?>

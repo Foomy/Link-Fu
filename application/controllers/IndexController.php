@@ -94,7 +94,7 @@ class IndexController extends LinkFu_Controller_Abstract
 	public function editAction()
 	{
 		if (! $this->_isAjax()) {
-			$this->_redirect('/');
+			$this->redirect('/');
 		}
 
 		$returnData = array(
@@ -139,7 +139,7 @@ class IndexController extends LinkFu_Controller_Abstract
 			$link->save();
 		}
 
-		$this->_redirect('/');
+		$this->redirect('/');
 	}
 
 	/**
@@ -148,11 +148,11 @@ class IndexController extends LinkFu_Controller_Abstract
 	 */
 	public function deleteAction()
 	{
-		if (! $this->_isAjax()) {
-			$this->_redirect('/');
+		if (! $this->isAjax()) {
+			$this->redirect('/');
 		}
 
-		$returnData = array(
+		$response = array(
 			'error'		=> false,
 			'message'	=> '',
 			'exception'	=> null,
@@ -160,12 +160,12 @@ class IndexController extends LinkFu_Controller_Abstract
 		);
 
 		$linkId = (int)$this->_getParam('linkId', 0);
-        $returnData['linkId'] = $linkId;
-        $link = $this->_bookmarkTable->findById($linkId);
+		$response['linkId'] = $linkId;
+		$link = $this->_bookmarkTable->findById($linkId);
 
-       $link->delete();
+		$link->delete();
 
-		$this->_helper->json($returnData);
+		$this->_helper->json($response);
 	}
 }
 

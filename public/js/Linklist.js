@@ -9,23 +9,20 @@ Linklist = {
 		ref.each(function() {
 
 			jQuery(this).unbind('click').bind('click.is_linkctrl_del', function() {
-				var id = jQuery(this).val();
-
 				jQuery.ajax({
 					type: 'post',
 					url: '/index/delete/',
 					data: {
-						linkId: id
+						linkId: jQuery(this).data('lid')
 					},
 					dataType: 'json',
-					success: function(data) {
-						if (!data.error) {
-							console.log('#item_'+data.linkId);
-							jQuery('#item_'+data.linkId).remove();
+					success: function(response) {
+						if (!response.error) {
+							jQuery('.is_item_'+response.linkId).remove();
 						}
 					},
-					error: function(data) {
-						console.log('Fehler beim Speichern des Bookmarks ' + data.linkId);
+					error: function(response) {
+						console.log('Fehler beim Speichern des Bookmarks ' + response.linkId);
 					}
 				});
 			});
