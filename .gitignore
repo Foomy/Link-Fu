@@ -1,5 +1,5 @@
-# phpstorm files
-.idea/ 
+# phpstorm project directory
+.idea/
 
 # eclipse project files
 .buildpath
@@ -12,11 +12,10 @@
 # librarys & symlinks
 library/Zend
 library/Foo
-tests/library/Zend
-tests/library/phpunit
 
 # logs
 logs/
 
 # zend specific files
 .zfproject.xml
+/nbproject/private/

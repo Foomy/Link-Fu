@@ -8,7 +8,7 @@ Linklist = {
 	deleteLink: function(ref) {
 		ref.each(function() {
 
-			jQuery(this).unbind('click').bind('click.is_linkctrl_del', function() {
+			jQuery(this).unbind('click').bind('click.linkctrl_del', function() {
 				jQuery.ajax({
 					type: 'post',
 					url: '/index/delete/',
@@ -35,7 +35,7 @@ Linklist = {
 
 		ref.each(function() {
 
-			jQuery(this).unbind('click').bind('click.is_linkctrl_edt', function() {
+			jQuery(this).unbind('click').bind('click.linkctrl_edt', function() {
 
 				id = jQuery(this).val();
 				jQuery.ajax({

@@ -71,8 +71,8 @@ class IndexController extends LinkFu_Controller_Abstract
 
 	public function bookmarkFormAction()
 	{
-		if ($this->_isAjax()) {
-			$this->_disableLayout();
+		if ($this->isAjax()) {
+			$this->disableLayout();
 		}
 
 		$form = new Form_Link();
@@ -93,7 +93,7 @@ class IndexController extends LinkFu_Controller_Abstract
 	 */
 	public function editAction()
 	{
-		if (! $this->_isAjax()) {
+		if (! $this->isAjax()) {
 			$this->redirect('/');
 		}
 
@@ -107,6 +107,7 @@ class IndexController extends LinkFu_Controller_Abstract
 		);
 
 		$linkId = (int)$this->_getParam('linkId', 0);
+
 		if (null !==  ($link = $this->_bookmarkTable->findById($linkId))) {
 			$returnData = array(
 				'linkId' => $link->getId(),

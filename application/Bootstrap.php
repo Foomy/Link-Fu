@@ -57,6 +57,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
 		$view->headScript()->appendFile('/js/' . $jquery, Foo_Controller_Abstract::MIME_JS);
 		$view->headScript()->appendFile('/js/Trigger.js', Foo_Controller_Abstract::MIME_JS);
+		$view->headScript()->appendFile('/js/Layer.js', Foo_Controller_Abstract::MIME_JS);
 
 		$viewRenderer = Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer');
 		$viewRenderer->setView($view);
