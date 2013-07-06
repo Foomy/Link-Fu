@@ -97,7 +97,7 @@ class IndexController extends LinkFu_Controller_Abstract
 			$this->redirect('/');
 		}
 
-		$returnData = array(
+		$response = array(
 			'error'		=> false,
 			'message'	=> '',
 			'exception'	=> null,
@@ -109,19 +109,19 @@ class IndexController extends LinkFu_Controller_Abstract
 		$linkId = (int)$this->_getParam('linkId', 0);
 
 		if (null !==  ($link = $this->_bookmarkTable->findById($linkId))) {
-			$returnData = array(
+			$response = array(
 				'linkId' => $link->getId(),
 				'reference' => $link->getReference(),
 				'linktext' => $link->getLinktext()
 			);
 		} else {
 			$message = sprintf('Bookmark with id %d not found in database.', $linkId);
-			$returnData['error'] = true;
-			$returnData['message'] = $message;
+			$response['error'] = true;
+			$response['message'] = $message;
 			$this->_debug($message);
 		}
 
-		$this->_helper->json($returnData);
+		$this->_helper->json($response);
 	}
 
 	/**
